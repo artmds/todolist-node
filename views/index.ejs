@@ -1,26 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>To Do List</title>
-</head>
-<body>
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="style.css" />
+      <title>To Do List</title>
+   </head>
+   <body>
+      <header>
+         <% if(task == null) { %>
+         <form action="/create" method="post">
+            <input
+               type="text"
+               name="task"
+               id="task"
+               placeholder="Bota uma tarefa aekkk"
+            />
+            <button id="addButton" type="submit">Add</button>
+         </form>
 
-  <form action="/create" method="post">
-    <input type="text" name="task" id="task" placeholder="Bota uma tarefa aekkk">
-    <button id="addButton" type="submit">Add</button>
-  </form>
+         <% } else{ %>
+         <form action="/updateOne/<%= task._id %>" method="post">
+            <input type="text" name="task" id="task" value="<%= task.task %>" />
+            <button id="addButton" type="submit">Atualizar</button>
+         </form>
+         <% } %>
+      </header>
 
+      <section id="tasks">
+         <ul>
+            <% tasksList.forEach((task) => { %>
+            <li>
+               <%= task.task %> | <%= task.date.toLocaleDateString('pt-BR') %>
+               <a href="/getById/<%= task._id%>/update">Editar</a>
+               <a href="/getById/<%= task._id%>/delete">Apagar</a>
+            </li>
+            <% }) %>
+         </ul>
+      </section>
 
-  <ul>
-    <% tasksList.forEach((task) => { %>
-    <li> <%= task.task %> | <%= task.date.toLocaleDateString('pt-BR') %> </li>
-    <% }) %>
-  </ul>
+      <% if(taskDelete != null){ %>
+      <section id="modal">
+         <div class="card">
+            <a href="/">X</a>
+            <h2>Confirm</h2>
+            <p>Deseja realmente apagar: <%= taskDelete.task %>?</p>
+            <a href="/">Não</a>
+            <a href="/deleteOne/<%= taskDelete._id %>">Sim</a>
+         </div>
+      </section>
+      <% } %>
 
-  <script src="script.js"></script>
-</body>
+      <script src="script.js"></script>
+   </body>
 </html>
